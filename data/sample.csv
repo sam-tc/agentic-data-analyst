@@ -1,0 +1,6 @@
+product, price, quantity, category
+Laptop, 60000, 2, Electronics
+Mouse, 1000, 10, Electronics
+Keyboard, 2000, 5, Electronics
+Chair, 5000, 4, Furniture
+Desk, 12000, 2, Furniture
