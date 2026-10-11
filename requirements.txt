@@ -1,3 +1,5 @@
 pandas
 pytest
 plotly
+google-genai
+python-dotenv

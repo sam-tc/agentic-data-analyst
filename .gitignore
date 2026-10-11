@@ -4,6 +4,7 @@ __pycache__/
 .env
 .env.*
 !.env.example
+outputs/
 .DS_Store
 .pytest_cache/
 .streamlit/secrets.toml
