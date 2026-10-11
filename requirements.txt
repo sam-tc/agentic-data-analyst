@@ -3,3 +3,4 @@ pytest
 plotly
 google-genai
 python-dotenv
+streamlit
