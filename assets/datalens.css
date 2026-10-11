@@ -1,0 +1,510 @@
+:root {
+    --dl-bg: #070b16;
+    --dl-panel: #121b2e;
+    --dl-text: #f5f7ff;
+    --dl-muted: #a2aec7;
+    --dl-stroke: rgba(170, 187, 232, 0.13);
+    --dl-violet: #aa99ff;
+    --dl-cyan: #73e3eb;
+}
+
+/* ============================================================
+   APP BACKGROUND
+   ============================================================ */
+
+.stApp {
+    color: var(--dl-text);
+    background:
+        radial-gradient(
+            ellipse at 85% 2%,
+            rgba(104, 80, 217, 0.15),
+            transparent 37%
+        ),
+        radial-gradient(
+            ellipse at 13% 70%,
+            rgba(25, 163, 195, 0.06),
+            transparent 34%
+        ),
+        var(--dl-bg);
+}
+
+.block-container {
+    max-width: 1340px;
+    padding-top: 6rem !important;
+    padding-bottom: 5rem;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+
+[data-testid="stSidebar"] {
+    background: linear-gradient(
+        172deg,
+        #141d31,
+        #0a1020 85%
+    );
+    border-right: 1px solid var(--dl-stroke);
+}
+
+[data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
+    gap: 0.9rem;
+}
+
+/* Brand */
+
+.dl-brand {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin: 8px 0 30px;
+}
+
+.dl-logo {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    font-size: 26px;
+    color: #fff;
+    background: linear-gradient(
+        135deg,
+        #8a74ff,
+        #49bdd5
+    );
+    box-shadow: 0 8px 30px rgba(108, 96, 255, 0.26);
+}
+
+.dl-brand strong {
+    display: block;
+    color: #f4f5ff;
+    font-size: 23px;
+    letter-spacing: -1px;
+    line-height: 1.1;
+}
+
+.dl-brand small {
+    display: block;
+    margin-top: 5px;
+    color: #94a4c6;
+    letter-spacing: 2px;
+    font-size: 9px;
+    font-weight: 700;
+}
+
+/* Sidebar capability card */
+
+.dl-sidebar-panel {
+    border: 1px solid var(--dl-stroke);
+    border-radius: 18px;
+    padding: 20px;
+    background: linear-gradient(
+        145deg,
+        rgba(120, 97, 255, 0.13),
+        rgba(79, 215, 226, 0.04)
+    );
+    margin: 20px 0 8px;
+}
+
+.dl-sidebar-label {
+    display: block;
+    color: #93a3c6;
+    font-size: 10px;
+    letter-spacing: 1.6px;
+    font-weight: 750;
+}
+
+.dl-sidebar-panel strong {
+    display: block;
+    margin-top: 11px;
+    font-size: 32px;
+    font-weight: 800;
+    color: #f5f7ff;
+}
+
+.dl-sidebar-panel strong span {
+    font-size: 14px;
+    color: #a7b5d0;
+    font-weight: 500;
+}
+
+.dl-sidebar-panel p {
+    margin: 10px 0 0;
+    color: #a7b5d0;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+/* ============================================================
+   PREMIUM HERO
+   ============================================================ */
+
+.dl-hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    margin-bottom: 25px;
+    padding: clamp(26px, 4.5vw, 54px);
+    border-radius: 28px;
+    border: 1px solid rgba(172, 152, 255, 0.23);
+    background: linear-gradient(
+        117deg,
+        #181f3c 3%,
+        #10182d 64%,
+        #181d43
+    );
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+}
+
+.dl-hero > :not(.dl-orb) {
+    position: relative;
+    z-index: 2;
+}
+
+.dl-overline {
+    color: #87e2ed;
+    font-weight: 800;
+    font-size: 11px;
+    letter-spacing: 2px;
+}
+
+.dl-status-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    margin-right: 8px;
+    vertical-align: middle;
+    border-radius: 50%;
+    background: #80ebd8;
+    box-shadow: 0 0 15px #70e6dc;
+}
+
+.dl-hero h1 {
+    max-width: 940px;
+    margin: 21px 0;
+    color: #f5f7ff;
+    font-size: clamp(35px, 4.8vw, 66px);
+    line-height: 1.08;
+    letter-spacing: -2.7px;
+    font-weight: 820;
+}
+
+.dl-hero h1 span {
+    color: transparent;
+    background: linear-gradient(
+        95deg,
+        #c9baff,
+        #8dafff 55%,
+        #6fe1e9
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+}
+
+.dl-hero p {
+    color: #b7c2dc;
+    max-width: 680px;
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+.dl-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-top: 25px;
+}
+
+.dl-chips span {
+    border: 1px solid rgba(207, 210, 255, 0.14);
+    background: rgba(255, 255, 255, 0.055);
+    border-radius: 999px;
+    padding: 8px 13px;
+    color: #e3e8ff;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+/* Hero decorative glows */
+
+.dl-orb {
+    position: absolute;
+    z-index: 0;
+    pointer-events: none;
+    border-radius: 50%;
+    filter: blur(3px);
+}
+
+.dl-orb-one {
+    width: 420px;
+    height: 420px;
+    top: -245px;
+    right: -70px;
+    background: radial-gradient(
+        circle,
+        rgba(146, 112, 255, 0.40),
+        transparent 67%
+    );
+}
+
+.dl-orb-two {
+    width: 310px;
+    height: 310px;
+    bottom: -220px;
+    right: 25%;
+    background: radial-gradient(
+        circle,
+        rgba(71, 212, 221, 0.23),
+        transparent 70%
+    );
+}
+
+/* ============================================================
+   DASHBOARD METRICS
+   ============================================================ */
+
+.dl-section-label {
+    margin: 20px 0 12px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #746de2;
+}
+
+.dl-section-label span {
+    margin-left: 9px;
+    color: #a8b7d5;
+}
+
+[data-testid="stMetric"] {
+    background: linear-gradient(
+        140deg,
+        rgba(26, 39, 65, 0.94),
+        rgba(14, 22, 41, 0.96)
+    );
+    border: 1px solid var(--dl-stroke);
+    border-radius: 20px;
+    padding: 20px 24px;
+    min-height: 125px;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.17);
+}
+
+[data-testid="stMetricLabel"] {
+    color: #a0afce;
+    font-weight: 600;
+}
+
+[data-testid="stMetricValue"] {
+    color: #f7f8ff;
+    font-size: 2.1rem;
+    letter-spacing: -1.2px;
+}
+
+/* ============================================================
+   TABS
+   ============================================================ */
+
+[data-baseweb="tab-list"] {
+    gap: 12px;
+    margin-top: 14px;
+}
+
+[data-baseweb="tab"] {
+    color: #c1c8e2;
+    font-weight: 650;
+}
+
+[data-baseweb="tab"][aria-selected="true"] {
+    color: #b8a8ff !important;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
+.stButton > button,
+.stDownloadButton > button {
+    border-radius: 13px;
+    border: 1px solid rgba(157, 163, 248, 0.24);
+    background: linear-gradient(
+        180deg,
+        #202d4b,
+        #19243b
+    );
+    color: #e9edff;
+    font-weight: 650;
+    min-height: 45px;
+    transition:
+        transform 0.16s ease,
+        border-color 0.16s ease,
+        background 0.16s ease;
+}
+
+.stButton > button:hover,
+.stDownloadButton > button:hover {
+    color: white;
+    border-color: #a99aff;
+    background: #2c385b;
+    transform: translateY(-2px);
+}
+
+.stButton > button:focus-visible,
+.stDownloadButton > button:focus-visible {
+    outline: 2px solid #a99aff;
+    outline-offset: 2px;
+}
+
+/* ============================================================
+   SUGGESTED PROMPTS
+   ============================================================ */
+
+.dl-prompt-intro {
+    color: #93a4c4;
+    margin: 22px 0 13px;
+    font-weight: 800;
+    letter-spacing: 1.6px;
+    font-size: 10px;
+}
+
+.dl-prompt-intro span {
+    margin-left: 10px;
+    font-size: 12px;
+    letter-spacing: 0;
+    font-weight: 400;
+    color: #aebbd5;
+}
+
+/* ============================================================
+   EMPTY CHAT STATE
+   ============================================================ */
+
+.dl-empty-state {
+    text-align: center;
+    margin: 26px 0 14px;
+    padding: 36px 22px;
+    border: 1px dashed rgba(170, 187, 232, 0.18);
+    border-radius: 20px;
+    background: radial-gradient(
+        ellipse at top,
+        rgba(111, 95, 203, 0.1),
+        transparent 65%
+    );
+}
+
+.dl-empty-icon {
+    margin: auto auto 12px;
+    width: 44px;
+    height: 44px;
+    border-radius: 13px;
+    display: grid;
+    place-items: center;
+    background: rgba(142, 125, 255, 0.15);
+    color: #b9aaff;
+    font-size: 27px;
+}
+
+.dl-empty-state strong {
+    color: #eef1ff;
+    font-size: 18px;
+}
+
+.dl-empty-state p {
+    max-width: 510px;
+    margin: 9px auto 0;
+    font-size: 13px;
+    line-height: 1.7;
+    color: #9fadcc;
+}
+
+/* ============================================================
+   CHAT MESSAGES
+   ============================================================ */
+
+[data-testid="stChatMessage"] {
+    background: linear-gradient(
+        140deg,
+        rgba(24, 35, 59, 0.92),
+        rgba(15, 24, 44, 0.94)
+    );
+    border: 1px solid var(--dl-stroke);
+    border-radius: 19px;
+    padding: 18px;
+    margin: 10px 0;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+}
+
+[data-testid="stChatInput"] {
+    border-radius: 16px;
+}
+
+[data-testid="stChatInput"] textarea {
+    color: #f4f7ff;
+}
+
+/* ============================================================
+   DATA COMPONENTS
+   ============================================================ */
+
+[data-testid="stFileUploader"] {
+    border-radius: 15px;
+}
+
+[data-testid="stDataFrame"] {
+    border: 1px solid var(--dl-stroke);
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+[data-testid="stExpander"] {
+    border: 1px solid var(--dl-stroke);
+    border-radius: 14px;
+}
+
+/* ============================================================
+   RESPONSIVE LAYOUT
+   ============================================================ */
+
+@media (max-width: 850px) {
+    .block-container {
+        padding-top: 1.2rem;
+    }
+
+    .dl-hero {
+        padding: 25px;
+        border-radius: 21px;
+    }
+
+    .dl-hero h1 {
+        letter-spacing: -1.5px;
+    }
+
+    .dl-prompt-intro span {
+        display: block;
+        margin: 7px 0 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .stButton > button,
+    .stDownloadButton > button {
+        transition: none;
+    }
+
+    .stButton > button:hover,
+    .stDownloadButton > button:hover {
+        transform: none;
+    }
+}
+
+/* Keep content below Streamlit's fixed header */
+
+[data-testid="stMainBlockContainer"] {
+    padding-top: 6rem !important;
+}
+
+@media (max-width: 850px) {
+    [data-testid="stMainBlockContainer"] {
+        padding-top: 5rem !important;
+    }
+}
