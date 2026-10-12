@@ -38,6 +38,24 @@ html, body, [data-testid="stApp"], [data-testid="stAppViewContainer"] {
 
 [data-testid="stHeader"] { background: transparent; }
 
+/* Top-right toolbar (Stop, Share, star, edit, GitHub, menu): force readable ink colour.
+   It was inheriting a pale text colour and vanishing against the light page. */
+[data-testid="stToolbar"],
+[data-testid="stToolbar"] button,
+[data-testid="stToolbar"] a,
+[data-testid="stToolbar"] span,
+[data-testid="stToolbar"] p,
+[data-testid="stToolbarActions"] *,
+[data-testid="stStatusWidget"],
+[data-testid="stStatusWidget"] *,
+[data-testid="stMainMenu"] button {
+  color: var(--ink) !important;
+  opacity: 1;
+}
+[data-testid="stToolbar"] button:hover,
+[data-testid="stMainMenu"] button:hover { background: rgba(14, 18, 32, 0.08); border-radius: 10px; }
+[data-testid="stToolbar"] button:disabled { opacity: 0.5; }
+
 /* !important: Streamlit's own padding was winning, so content and chat bar disagreed */
 [data-testid="stMainBlockContainer"] {
   max-width: 1160px !important;
@@ -424,6 +442,32 @@ button[data-variant="segmented_control"]:last-of-type {
 [data-testid="stChatMessageContent"] p,
 [data-testid="stChatMessageContent"] li { line-height: 1.65; }
 
+/* Explicit ink colour for the assistant's answer text (scoped so the white user bubble is untouched).
+   Without this the text inherits the theme's text colour and can vanish on the white card. */
+[aria-label="Chat message from assistant"] p,
+[aria-label="Chat message from assistant"] li,
+[aria-label="Chat message from assistant"] strong,
+[aria-label="Chat message from assistant"] em,
+[aria-label="Chat message from assistant"] h1,
+[aria-label="Chat message from assistant"] h2,
+[aria-label="Chat message from assistant"] h3,
+[aria-label="Chat message from assistant"] h4,
+[aria-label="Chat message from assistant"] td,
+[aria-label="Chat message from assistant"] th,
+[aria-label="Chat message from assistant"] blockquote { color: var(--ink) !important; }
+[aria-label="Chat message from assistant"] li::marker { color: var(--cobalt); }
+
+/* Receipts expander: readable header, caption and JSON */
+[data-testid="stExpander"] summary,
+[data-testid="stExpander"] summary * { color: var(--ink) !important; opacity: 1; }
+[data-testid="stExpander"] [data-testid="stCaptionContainer"] * { color: var(--ink-3) !important; }
+[data-testid="stJson"] * { color: var(--ink) !important; }
+
+/* sidebar open/close chevrons */
+[data-testid="stSidebarCollapseButton"] *,
+[data-testid="stExpandSidebarButton"] *,
+[data-testid="stSidebarCollapsedControl"] * { color: var(--ink) !important; opacity: 1; }
+
 /* ---------- pipeline strip ---------- */
 
 .dl-pipe {
@@ -587,6 +631,10 @@ button[data-variant="segmented_control"]:last-of-type {
 }
 .dl-notice.warn { border-left-color: #f59e0b; background: #fff8eb; }
 .dl-notice span { color: var(--ink-2); font-size: 0.93rem; }
+/* the title had no colour of its own and inherited the theme's pale text */
+.dl-notice b { color: var(--ink) !important; font-size: 1rem; font-weight: 700; }
+.dl-notice.warn b { color: #7a3b05 !important; }
+.dl-notice:not(.warn) b { color: #9b1c28 !important; }
 
 /* ---------- charts, tables, buttons ---------- */
 
@@ -862,4 +910,14 @@ button[data-variant="segmented_control"]:last-of-type {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .dl-thinking .steps span:first-child { opacity: 1; }
+}
+
+
+/* ---------- narrow windows: let the tool belt wrap instead of squeezing ---------- */
+@media (max-width: 1000px) {
+  [data-testid="stHorizontalBlock"]:has([class*="st-key-tool-"]) { flex-wrap: wrap !important; }
+  [data-testid="stHorizontalBlock"]:has([class*="st-key-tool-"]) > [data-testid="stColumn"] {
+    flex: 1 1 calc(33.333% - 0.75rem) !important;
+    min-width: 150px !important;
+  }
 }
