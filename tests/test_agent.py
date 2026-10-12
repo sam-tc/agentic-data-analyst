@@ -156,7 +156,7 @@ def test_agent_executes_tool_using_fake_gemini(
     monkeypatch.setattr(
         agent.genai,
         "Client",
-        lambda api_key: fake_client
+        lambda api_key, **kwargs: fake_client
     )
 
     answer, trace = agent.ask_agent(
@@ -190,7 +190,7 @@ def test_agent_rejects_answer_without_tool(
     monkeypatch.setattr(
         agent.genai,
         "Client",
-        lambda api_key: fake_client
+        lambda api_key, **kwargs: fake_client
     )
 
     with pytest.raises(
