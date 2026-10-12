@@ -1,13 +1,17 @@
-
-# DataLens Studio
+# Lumo Studio
 
 ### An AI-powered, tool-using data analysis workspace
 
-DataLens Studio is a Python application that allows users to upload CSV datasets, ask questions in natural language, and receive answers supported by real analytical calculations.
+Lumo Studio is a Python application that allows users to upload CSV datasets, ask questions in natural language, and receive answers supported by real analytical calculations.
 
 The system uses Google's Gemini API for understanding questions and selecting tools. The actual data analysis is performed by six Python tools built with Pandas and Plotly.
 
-Unlike a basic LLM chatbot, DataLens maintains an execution trace showing which tools were called, what arguments they received, and what results they produced.
+Unlike a basic LLM chatbot, Lumo maintains an execution trace showing which tools were called, what arguments they received, and what results they produced.
+
+## Live Application
+
+Try Lumo Studio:
+https://agentic-data-analyst-nbkytjnes7qfrzhhdtdqpb.streamlit.app/
 
 ## Features
 
@@ -16,8 +20,8 @@ Unlike a basic LLM chatbot, DataLens maintains an execution trace showing which 
 - Automatically select and execute analytical tools.
 - Generate interactive data visualizations.
 - Inspect tool execution history.
-- View dataset statistics, column types, and missing values.
-- Use dataset-aware suggested questions.
+- View dataset statistics, column types, missing values, and available correlation heatmaps.
+- Use dataset-aware suggested questions and quick tool actions.
 - Analyze different datasets without hard-coded column names.
 - Handle invalid inputs and temporary API errors.
 - Run automated tests without consuming API quota.
@@ -45,7 +49,7 @@ These tools perform distinct operations and can be combined by the AI agent when
 6. The Python tool executes the actual calculation.
 7. The tool result is returned to the model.
 8. The model generates an answer using the calculated result.
-9. DataLens displays the answer, any generated charts, and the execution trace.
+9. Lumo displays the answer, any generated charts, and the execution trace.
 
 For example:
 
@@ -55,11 +59,13 @@ For example:
 
 **Arguments:**
 
-    {
-        "group_column": "department",
-        "operation": "mean",
-        "value_column": "marks"
-    }
+```json
+{
+    "group_column": "department",
+    "operation": "mean",
+    "value_column": "marks"
+}
+```
 
 **Result:** CSE has the highest average, with 90 marks, in the included student example.
 
@@ -76,53 +82,61 @@ For example:
 
 ## Project Structure
 
-    agentic-data-analyst/
-    ├── app.py
-    ├── run_agent.py
-    ├── requirements.txt
-    ├── README.md
-    ├── .env.example
-    ├── .streamlit/
-    │   └── config.toml
-    ├── assets/
-    │   └── datalens.css
-    ├── sample_data/
-    │   ├── students.csv
-    │   └── sales.csv
-    ├── src/
-    │   ├── agent.py
-    │   ├── agent_tools.py
-    │   ├── data_loader.py
-    │   └── tools/
-    │       ├── profile.py
-    │       ├── filtering.py
-    │       ├── aggregation.py
-    │       ├── grouping.py
-    │       ├── correlation.py
-    │       └── visualization.py
-    └── tests/
+```text
+agentic-data-analyst/
+├── app.py
+├── run_agent.py
+├── requirements.txt
+├── README.md
+├── .env.example
+├── .streamlit/
+│   └── config.toml
+├── assets/
+│   └── styles.css
+├── sample_data/
+│   ├── students.csv
+│   └── sales.csv
+├── src/
+│   ├── agent.py
+│   ├── agent_tools.py
+│   ├── data_loader.py
+│   └── tools/
+│       ├── profile.py
+│       ├── filtering.py
+│       ├── aggregation.py
+│       ├── grouping.py
+│       ├── correlation.py
+│       └── visualization.py
+└── tests/
+```
 
 ## Installation
 
 ### 1. Clone the repository
 
-    git clone YOUR_REPOSITORY_URL
-    cd agentic-data-analyst
-
-Replace `YOUR_REPOSITORY_URL` with the public repository URL.
+```bash
+git clone https://github.com/sam-tc/agentic-data-analyst.git
+cd agentic-data-analyst
+```
 
 ### 2. Create a virtual environment
 
-    python3 -m venv .venv
-    source .venv/bin/activate
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
 
 On Windows, activate it using:
 
-    .venv\Scripts\activate
+```powershell
+.venv\Scripts\activate
+```
 
 ### 3. Install dependencies
 
-    python -m pip install -r requirements.txt
+```bash
+python -m pip install -r requirements.txt
+```
 
 ### 4. Configure the Gemini API
 
@@ -132,14 +146,18 @@ https://aistudio.google.com/apikey
 
 Copy the example environment file:
 
-    cp .env.example .env
+```bash
+cp .env.example .env
+```
 
 Add your key to `.env`:
 
-    GEMINI_API_KEY=your_api_key_here
-    GEMINI_MODEL=gemini-3.8-flash
+```env
+GEMINI_API_KEY=your_api_key_here
+GEMINI_MODEL=gemini-3.6-flash
+```
 
-The model must be available to your Google AI Studio project. Free-tier eligibility, quotas, and availability depend on Google's current policies.
+Use a model available to your Google AI Studio project. Free-tier eligibility, quotas, and availability depend on Google's current policies.
 
 Never commit your `.env` file or API keys.
 
@@ -147,13 +165,15 @@ Never commit your `.env` file or API keys.
 
 Start the Streamlit server:
 
-    python -m streamlit run app.py
+```bash
+python -m streamlit run app.py
+```
 
 Open the local URL displayed in your terminal, usually:
 
-    http://localhost:8501
+http://localhost:8501
 
-The application loads `students.csv` as a sample dataset. You can upload your own CSV through the sidebar.
+The application selects `students.csv` by default. You can switch to another included sample dataset or upload your own CSV through the sidebar.
 
 The Streamlit interface currently limits uploads to 10 MB.
 
@@ -161,11 +181,15 @@ The Streamlit interface currently limits uploads to 10 MB.
 
 You can also ask questions without the web interface:
 
-    python run_agent.py sample_data/students.csv "Which department has the highest average marks?"
+```bash
+python run_agent.py sample_data/students.csv "Which department has the highest average marks?"
+```
 
 For another dataset:
 
-    python run_agent.py sample_data/sales.csv "Which region generated the highest total revenue?"
+```bash
+python run_agent.py sample_data/sales.csv "Which region generated the highest total revenue?"
+```
 
 The terminal displays the generated answer and the actual tool calls.
 
@@ -173,7 +197,9 @@ The terminal displays the generated answer and the actual tool calls.
 
 Run the entire automated test suite:
 
-    python -m pytest -v
+```bash
+python -m pytest -v
+```
 
 Tests cover:
 
