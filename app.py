@@ -1,4 +1,4 @@
-"""DataLens Studio: a tool-using AI data analyst.
+"""Lumo Studio: a tool-using AI data analyst.
 
 UI layer only. The backend contract is unchanged:
     ask_agent(df, question) -> (answer_text, trace)
@@ -26,6 +26,10 @@ from src.tools.visualization import create_visualization
 
 ROOT = Path(__file__).resolve().parent
 MAX_UPLOAD_BYTES = 10 * 1024 * 1024
+
+# Change the product name in ONE place.
+APP_NAME = "Lumo"
+APP_SUFFIX = "Studio"
 
 INK = "#0E1220"
 COBALT = "#3B4BFF"
@@ -90,13 +94,13 @@ def tool_meta(name: str) -> dict:
 # ============================================================
 
 st.set_page_config(
-    page_title="DataLens Studio",
+    page_title=f"{APP_NAME} {APP_SUFFIX}",
     page_icon="🔎",
     layout="wide",
     initial_sidebar_state="auto",
 )
 
-css_file = ROOT / "assets" / "datalens.css"
+css_file = ROOT / "assets" / "styles.css"
 if css_file.is_file():
     st.html(css_file)
 
@@ -587,10 +591,10 @@ def render_message(message: dict, index: int, is_last: bool) -> None:
 
 with st.sidebar:
     st.html(
-        """
+        f"""
         <div class="dl-brand">
           <span class="logo"></span>
-          <div><strong>DataLens</strong><small>Studio</small></div>
+          <div><strong>{html.escape(APP_NAME)}</strong><small>{html.escape(APP_SUFFIX)}</small></div>
         </div>
         """
     )
