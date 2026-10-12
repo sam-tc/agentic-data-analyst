@@ -1,20 +1,10 @@
 [theme]
 base = "dark"
-primaryColor = "#7c83ff"
-backgroundColor = "#0a0f1f"
-secondaryBackgroundColor = "#111936"
-textColor = "#eef1fb"
+primaryColor = "#8885F6"
+backgroundColor = "#0D1220"
+secondaryBackgroundColor = "#192235"
+textColor = "#F2F4FB"
 font = "sans serif"
-
-[theme.sidebar]
-backgroundColor = "#0c1226"
-secondaryBackgroundColor = "#111936"
 
 [server]
 maxUploadSize = 10
-
-[client]
-toolbarMode = "minimal"
-
-[browser]
-gatherUsageStats = false

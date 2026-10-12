@@ -633,6 +633,30 @@ button[data-variant="segmented_control"]:last-of-type {
 [data-testid="stChatInput"] textarea:focus { outline: none !important; }
 [data-testid="stChatInput"] button { background: var(--cobalt); color: #fff; border-radius: 12px; }
 
+/* Streamlit paints its own (dark) background on the INNER input elements, not just the wrapper.
+   Force every layer light, with ink text, in all states (idle, typing, focused). */
+[data-testid="stChatInput"],
+[data-testid="stChatInput"] > div,
+[data-testid="stChatInput"] [data-baseweb="textarea"],
+[data-testid="stChatInput"] [data-baseweb="base-input"],
+[data-testid="stChatInput"] textarea,
+[data-testid="stChatInput"] textarea:focus,
+[data-testid="stChatInput"] textarea:active {
+  background: var(--card) !important;
+  background-color: var(--card) !important;
+  color: var(--ink) !important;
+  -webkit-text-fill-color: var(--ink) !important;
+  caret-color: var(--cobalt);
+}
+[data-testid="stChatInput"] textarea::placeholder {
+  color: var(--ink-3) !important;
+  -webkit-text-fill-color: var(--ink-3) !important;
+  opacity: 1;
+}
+/* the send button keeps its cobalt fill (the rules above target containers, not it) */
+[data-testid="stChatInput"] button { background: var(--cobalt) !important; color: #fff !important; }
+[data-testid="stChatInput"] button:disabled { background: #c9d0e8 !important; }
+
 /* ---------- dataset view ---------- */
 
 .dl-h { font-size: 1.2rem; font-weight: 700; margin: 1.8rem 0 0.7rem; padding: 0; }
