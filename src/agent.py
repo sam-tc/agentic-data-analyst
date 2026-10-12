@@ -26,7 +26,15 @@ def ask_agent(df: pd.DataFrame, question: str) -> tuple[str, list]:
     if not question.strip():
         raise ValueError("Please provide a question.")
 
-    client = genai.Client(api_key=api_key)
+    client = genai.Client(
+        api_key=api_key,
+        http_options=types.HttpOptions(
+            timeout=30000,
+            retry_options=types.HttpRetryOptions(
+                attempts=1
+            ),
+        ),
+    )
 
     trace = []
     tools = build_tools(df, trace)
