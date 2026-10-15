@@ -1,4 +1,3 @@
-
 import pandas as pd
 
 
@@ -46,7 +45,15 @@ def compare_groups(
                 f"Value column '{value_column}' must be numeric."
             )
 
-        values = grouped[value_column]
+        clean_df = df.copy()
+        clean_df[value_column] = clean_df[value_column].replace(
+            [float("inf"), float("-inf")], float("nan")
+        )
+
+        values = clean_df.groupby(
+            group_column,
+            dropna=False
+        )[value_column]
 
         if operation == "sum":
             result = values.sum(min_count=1)
@@ -65,10 +72,14 @@ def compare_groups(
         rows.append({
             "group": None if pd.isna(group) else str(group),
             "value": (
-                None if pd.isna(number)
-                else int(number) if operation == "count"
+                None
+                if pd.isna(number) or number in (
+                    float("inf"), float("-inf")
+                )
+                else int(number)
+                if operation == "count"
                 else float(number)
-            )
+            ),
         })
 
     return {

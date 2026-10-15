@@ -642,6 +642,7 @@ with st.sidebar:
     if st.session_state.get("dataset_id") != fingerprint:
         st.session_state.dataset_id = fingerprint
         st.session_state.history = []
+        st.session_state.pop("queued", None)
 
     filled_pct = completeness(df)
     st.html(
@@ -818,7 +819,11 @@ if view == "Analyst":
             thinking = st.empty()
             thinking.html(THINKING_HTML)
             try:
-                answer, trace = ask_agent(df, question)
+                answer, trace = ask_agent(
+                    df,
+                    question,
+                    save_chart_files=False,
+                )
                 charts = charts_from_trace(df, trace)
             except Exception as error:  # noqa: BLE001 - surfaced to the user
                 thinking.empty()

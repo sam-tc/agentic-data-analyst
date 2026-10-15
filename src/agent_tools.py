@@ -16,7 +16,9 @@ from .tools.visualization import create_visualization as _create_visualization
 def build_tools(df: pd.DataFrame, trace: list, output_dir=Path("outputs")):
     """Adapt our six data tools for LLM function calling."""
 
-    output_dir = Path(output_dir)
+    # None disables chart-file creation for the Streamlit application.
+    if output_dir is not None:
+        output_dir = Path(output_dir)
 
     def execute(name, args, operation):
         try:
@@ -52,7 +54,13 @@ def build_tools(df: pd.DataFrame, trace: list, output_dir=Path("outputs")):
                 and pd.api.types.is_numeric_dtype(df[column])
                 and not pd.api.types.is_bool_dtype(df[column])
             ):
-                selected = float(value)
+                if (
+                    pd.api.types.is_integer_dtype(df[column])
+                    and str(value).strip().lstrip("+-").isdigit()
+                ):
+                    selected = int(value)
+                else:
+                    selected = float(value)
 
                 if not math.isfinite(selected):
                     raise ValueError(
@@ -100,7 +108,10 @@ def build_tools(df: pd.DataFrame, trace: list, output_dir=Path("outputs")):
                 "value_column": value_column,
             },
             lambda: _compare_groups(
-                df, group_column, operation, value_column or None
+                df,
+                group_column,
+                operation,
+                value_column or None
             )
         )
 
@@ -109,7 +120,11 @@ def build_tools(df: pd.DataFrame, trace: list, output_dir=Path("outputs")):
         return execute(
             "correlation_analysis",
             {"column_x": column_x, "column_y": column_y},
-            lambda: _calculate_correlation(df, column_x, column_y)
+            lambda: _calculate_correlation(
+                df,
+                column_x,
+                column_y
+            )
         )
 
     def plot_chart(
@@ -121,26 +136,30 @@ def build_tools(df: pd.DataFrame, trace: list, output_dir=Path("outputs")):
 
         def run():
             result = _create_visualization(
-                df, chart_type, x_column, y_column or None
+                df,
+                chart_type,
+                x_column,
+                y_column or None
             )
 
-            output_dir.mkdir(parents=True, exist_ok=True)
-
-            chart_path = output_dir / f"chart_{len(trace) + 1}.html"
-
-            Figure(result["figure"]).write_html(
-                str(chart_path),
-                include_plotlyjs=True
-            )
-
-            return {
-                **{
-                    key: value
-                    for key, value in result.items()
-                    if key != "figure"
-                },
-                "chart_file": str(chart_path),
+            metadata = {
+                key: value
+                for key, value in result.items()
+                if key != "figure"
             }
+
+            if output_dir is not None:
+                output_dir.mkdir(parents=True, exist_ok=True)
+                chart_path = output_dir / f"chart_{len(trace) + 1}.html"
+
+                Figure(result["figure"]).write_html(
+                    str(chart_path),
+                    include_plotlyjs=True
+                )
+
+                metadata["chart_file"] = str(chart_path)
+
+            return metadata
 
         return execute(
             "plot_chart",

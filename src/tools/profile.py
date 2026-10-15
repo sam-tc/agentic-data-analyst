@@ -1,3 +1,4 @@
+import math
 
 import pandas as pd
 
@@ -17,14 +18,21 @@ def profile_dataset(df: pd.DataFrame) -> dict:
             "unique_values": int(series.nunique(dropna=True)),
         }
 
-        if pd.api.types.is_numeric_dtype(series):
-            valid_values = series.dropna()
+        if (
+            pd.api.types.is_numeric_dtype(series)
+            and not pd.api.types.is_bool_dtype(series)
+        ):
+            valid_values = series.replace(
+                [float("inf"), float("-inf")], float("nan")
+            ).dropna()
 
             if not valid_values.empty:
+                mean = float(valid_values.mean())
+
                 info["statistics"] = {
                     "minimum": float(valid_values.min()),
                     "maximum": float(valid_values.max()),
-                    "mean": float(valid_values.mean()),
+                    "mean": mean if math.isfinite(mean) else None,
                 }
 
         columns.append(info)

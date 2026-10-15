@@ -1,4 +1,6 @@
+import math
 
+import numpy as np
 import pandas as pd
 
 
@@ -22,10 +24,11 @@ def aggregate_column(
         )
 
     series = df[column]
-    valid_values = series.dropna()
+    non_missing = series.dropna()
+    valid_values = non_missing
 
     if operation == "count":
-        result = int(len(valid_values))
+        result = int(len(non_missing))
 
     else:
         if (
@@ -36,9 +39,13 @@ def aggregate_column(
                 f"Column '{column}' must contain numeric data."
             )
 
+        valid_values = series.replace(
+            [float("inf"), float("-inf")], float("nan")
+        ).dropna()
+
         if valid_values.empty:
             raise ValueError(
-                f"Column '{column}' has no valid numeric values."
+                f"Column '{column}' has no finite numeric values."
             )
 
         operations = {
@@ -49,11 +56,19 @@ def aggregate_column(
             "max": lambda s: s.max(),
         }
 
-        result = float(operations[operation](valid_values))
+        with np.errstate(over="ignore", invalid="ignore"):
+            result = float(operations[operation](valid_values))
+
+        if not math.isfinite(result):
+            raise ValueError(
+                "The result exceeds the supported finite numeric range."
+            )
 
     return {
         "column": column,
         "operation": operation,
         "value": result,
-        "non_missing_rows": int(len(valid_values)),
+        "non_missing_rows": int(len(non_missing)),
+        "rows_used": int(len(valid_values)),
+        "non_finite_excluded": int(len(non_missing) - len(valid_values)),
     }
