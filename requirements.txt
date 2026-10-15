@@ -4,3 +4,4 @@ plotly
 google-genai
 python-dotenv
 streamlit>=1.50
+groq

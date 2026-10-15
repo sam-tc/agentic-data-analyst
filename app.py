@@ -20,8 +20,12 @@ import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 from google.genai import errors as genai_errors
+from groq import (
+    APIConnectionError as GroqConnectionError,
+    APIStatusError as GroqStatusError,
+)
 
-from src.agent import ask_agent
+from src.provider import ask_lumo_agent
 from src.data_loader import load_csv
 from src.tools.visualization import create_visualization
 
@@ -510,25 +514,81 @@ def show_receipts(trace: list[dict]) -> None:
             st.json(clean_result(event.get("result", {})), expanded=1)
 
 
+
 def friendly_error(error: Exception) -> tuple[str, str, str]:
-    """-> (level, title, how to fix)"""
+    """Return the error level, title, and helpful message."""
+
+    if isinstance(error, GroqStatusError):
+        if error.status_code == 429:
+            return (
+                "warn",
+                "Groq rate limit reached",
+                "The AI service has reached its usage limit. "
+                "Please try again later.",
+            )
+
+        if error.status_code >= 500:
+            return (
+                "warn",
+                "Groq is temporarily unavailable",
+                "Please try again later.",
+            )
+
+        return (
+            "error",
+            "Groq couldn't process this request",
+            "Check the AI provider configuration or server logs.",
+        )
+
+    if isinstance(error, GroqConnectionError):
+        return (
+            "warn",
+            "Could not connect to Groq",
+            "Check the connection and try again.",
+        )
+
     if isinstance(error, genai_errors.APIError):
         code = getattr(error, "code", None)
+
         if code == 503:
-            return ("warn", "Gemini is overloaded right now",
-                    "This usually clears in a few seconds. Try again.")
+            return (
+                "warn",
+                "Gemini is overloaded right now",
+                "Please try again later.",
+            )
+
         if code == 429:
-            return ("warn", "Gemini rate limit reached",
-                    "Wait a minute, then try again.")
+            return (
+                "warn",
+                "Gemini rate limit reached",
+                "The API quota has been exhausted. Try again after it resets.",
+            )
+
         if code == 403:
-            return ("error", "Gemini denied access for this API project",
-                    "Check your key and model access in Google AI Studio.")
-        return ("error", "Gemini couldn't complete this request",
-                "Try again. If it keeps failing, check the terminal logs.")
+            return (
+                "error",
+                "Gemini denied access for this API project",
+                "Check your key and model access in Google AI Studio.",
+            )
+
+        return (
+            "error",
+            "Gemini couldn't complete this request",
+            "Check the server logs for details.",
+        )
+
     if isinstance(error, (RuntimeError, ValueError)):
-        return ("error", "The agent couldn't answer", str(error))
-    return ("error", f"Analysis failed ({type(error).__name__})",
-            "Check the terminal for details.")
+        return (
+            "error",
+            "The agent couldn't answer",
+            str(error),
+        )
+
+    return (
+        "error",
+        f"Analysis failed ({type(error).__name__})",
+        "Check the server logs for details.",
+    )
 
 
 def typewriter(text: str):
@@ -822,7 +882,7 @@ if view == "Analyst":
             thinking = st.empty()
             thinking.html(THINKING_HTML)
             try:
-                answer, trace = ask_agent(
+                answer, trace = ask_lumo_agent(
                     df,
                     question,
                     save_chart_files=False,
