@@ -1,277 +1,179 @@
-# Lumo Studio
+# ✦ Lumo Studio
 
-### An AI-powered, tool-using data analysis workspace
+**Your data has a story. Just ask.**
 
-Lumo Studio is a Python application that allows users to upload CSV datasets, ask questions in natural language, and receive answers supported by real analytical calculations.
+Ever opened a CSV file with hundreds of rows and wondered where to begin? Lumo Studio makes exploring data feel less like writing queries and more like having a conversation.
 
-The system uses Google's Gemini API for understanding questions and selecting tools. The actual data analysis is performed by six Python tools built with Pandas and Plotly.
+Upload a dataset, ask a question in plain English, and let Lumo do the analysis—with real Python calculations, interactive charts, and receipts showing exactly what happened behind the scenes.
 
-Unlike a basic LLM chatbot, Lumo maintains an execution trace showing which tools were called, what arguments they received, and what results they produced.
+**[Try Lumo Studio ↗](https://agentic-data-analyst-nbkytjnes7qfrzhhdtdqpb.streamlit.app/)**
 
-## Live Application
+---
 
-Try Lumo Studio:
-https://agentic-data-analyst-nbkytjnes7qfrzhhdtdqpb.streamlit.app/
+## What Can Lumo Do?
 
-## Features
+Lumo isn't just a chatbot that *talks* about data. It can actually work with it.
 
-- Upload and explore CSV datasets.
-- Ask analytical questions in natural language.
-- Automatically select and execute analytical tools.
-- Generate interactive data visualizations.
-- Inspect tool execution history.
-- View dataset statistics, column types, missing values, and available correlation heatmaps.
-- Use dataset-aware suggested questions and quick tool actions.
-- Analyze different datasets without hard-coded column names.
-- Handle invalid inputs and temporary API errors.
-- Run automated tests without consuming API quota.
+- **Ask away** — Explore CSV datasets using natural-language questions.
+- **Get real answers** — Calculations are performed using Pandas, not guessed by AI.
+- **See the bigger picture** — Generate interactive charts with Plotly.
+- **Look behind the scenes** — Inspect actual tool calls and their results.
+- **Bring your own data** — Upload a CSV or explore the included sample datasets.
+- **Keep the analysis going** — When Gemini hits supported API limits or temporary server errors, Groq can take over automatically.
 
-## The Six Analytical Tools
+## Six Tools, Plenty of Possibilities
 
-| Tool | Purpose |
+| Tool | What it does |
 |---|---|
-| Dataset Profiler | Inspects columns, data types, missing values, unique values, and numeric statistics. |
-| Row Filtering | Selects rows using comparisons such as greater than, equal to, and text matching. |
-| Statistical Aggregation | Calculates count, sum, mean, median, minimum, and maximum for a column. |
-| Grouping and Comparison | Groups records by category and compares statistics between groups. |
-| Correlation Analysis | Calculates Pearson correlation between two numerical columns. |
-| Data Visualization | Generates interactive bar charts, histograms, scatter plots, and line charts. |
+| Dataset Profile | Understand columns, data types, missing values, and statistics |
+| Row Filter | Find records matching specific conditions |
+| Aggregation | Calculate sums, averages, medians, counts, and more |
+| Group Comparison | Compare results across categories |
+| Correlation | Discover linear relationships between numeric columns |
+| Visualization | Create bar charts, histograms, scatter plots, and line charts |
 
-These tools perform distinct operations and can be combined by the AI agent when a question requires multiple analytical steps.
+All six are actual Python functions. The AI chooses which ones to use, while Python does the calculations.
 
-## How the Agent Works
+## See It in Action
 
-1. The user uploads a CSV dataset.
-2. Pandas loads the dataset into a DataFrame.
-3. The user submits a natural-language question.
-4. Gemini examines the available columns and registered tool descriptions.
-5. The model selects a suitable tool and supplies its arguments.
-6. The Python tool executes the actual calculation.
-7. The tool result is returned to the model.
-8. The model generates an answer using the calculated result.
-9. Lumo displays the answer, any generated charts, and the execution trace.
+Imagine uploading a dataset containing students, their departments, study hours, and marks.
 
-For example:
+**You ask:**
 
-**Question:** Which department has the highest average marks?
+> Which department has the highest average marks?
 
-**Selected tool:** `group_comparison`
+**Lumo answers:**
 
-**Arguments:**
+> CSE has the highest average marks at **90**, followed by ECE at 85 and IT at 80.
 
-```json
-{
-    "group_column": "department",
-    "operation": "mean",
-    "value_column": "marks"
-}
-```
-
-**Result:** CSE has the highest average, with 90 marks, in the included student example.
-
-## Technology Stack
-
-- Python
-- Pandas — dataset processing and statistical calculations
-- Plotly — interactive visualizations
-- Streamlit — web interface
-- Google Gemini API — natural-language understanding and function calling
-- Google GenAI Python SDK — model integration
-- Pytest — automated testing
-- Git and GitHub — version control
-
-## Project Structure
+**Behind the scenes:**
 
 ```text
-agentic-data-analyst/
-├── app.py
-├── run_agent.py
-├── requirements.txt
-├── README.md
-├── .env.example
-├── .streamlit/
-│   └── config.toml
-├── assets/
-│   └── styles.css
-├── sample_data/
-│   ├── students.csv
-│   └── sales.csv
-├── src/
-│   ├── agent.py
-│   ├── agent_tools.py
-│   ├── data_loader.py
-│   └── tools/
-│       ├── profile.py
-│       ├── filtering.py
-│       ├── aggregation.py
-│       ├── grouping.py
-│       ├── correlation.py
-│       └── visualization.py
-└── tests/
+Tool: group_comparison
+Group by: department
+Operation: mean
+Value column: marks
+
+Result:
+CSE → 90
+ECE → 85
+IT  → 80
 ```
 
-## Installation
+That's the idea behind Lumo: **an answer you can verify**, not just one that sounds convincing.
 
-### 1. Clone the repository
+You can also ask it to visualize order counts by region, calculate correlations, filter records, or summarize unfamiliar datasets.
+
+## Two AI Agents. One Set of Tools.
+
+Lumo uses two language-model providers:
+
+- **Gemini 3.6 Flash** — The primary agent for interpreting questions and choosing tools.
+- **Groq GPT-OSS 120B** — The backup agent when Gemini encounters supported rate-limit or temporary service errors.
+
+Both use the same six Python tools, so the underlying calculations remain consistent when they select the same operations.
+
+The flow is simple:
+
+```text
+Your question
+     ↓
+Gemini (primary)
+     │
+     └── If temporarily unavailable → Groq
+                                      ↓
+                              Python analytical tools
+                                      ↓
+                         Answer + charts + receipts
+```
+
+The fallback includes a temporary cooldown to avoid repeatedly calling Gemini after certain failures. Both providers still have their own API limits.
+
+## Built With
+
+| Technology | Role |
+|---|---|
+| Python | Application logic |
+| Pandas | Data analysis |
+| Plotly | Interactive visualizations |
+| Streamlit | Web application |
+| Google Gemini | Primary AI agent |
+| Groq + GPT-OSS 120B | Backup AI agent |
+| Pytest | Automated testing |
+
+## Run Lumo Locally
+
+**1. Clone the repository**
 
 ```bash
 git clone https://github.com/sam-tc/agentic-data-analyst.git
 cd agentic-data-analyst
 ```
 
-### 2. Create a virtual environment
+**2. Set up Python**
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-```
-
-On Windows, activate it using:
-
-```powershell
-.venv\Scripts\activate
-```
-
-### 3. Install dependencies
-
-```bash
 python -m pip install -r requirements.txt
 ```
 
-### 4. Configure the Gemini API
+**3. Configure your API keys**
 
-Create an API key using Google AI Studio:
+Copy `.env.example` to `.env`, then add your keys from [Google AI Studio](https://aistudio.google.com/apikey) and [Groq Cloud](https://console.groq.com/).
 
-https://aistudio.google.com/apikey
-
-Copy the example environment file:
-
-```bash
-cp .env.example .env
-```
-
-Add your key to `.env`:
-
-```env
-GEMINI_API_KEY=your_api_key_here
+```dotenv
+GEMINI_API_KEY=your_gemini_key
 GEMINI_MODEL=gemini-3.6-flash
+
+GROQ_API_KEY=your_groq_key
+GROQ_MODEL=openai/gpt-oss-120b
+
+LUMO_PROVIDER=gemini
+LUMO_GROQ_FALLBACK=true
+LUMO_GEMINI_FALLBACK=false
 ```
 
-Use a model available to your Google AI Studio project. Free-tier eligibility, quotas, and availability depend on Google's current policies.
+Never commit your `.env` file.
 
-Never commit your `.env` file or API keys.
-
-## Running the Web Application
-
-Start the Streamlit server:
+**4. Launch Lumo**
 
 ```bash
 python -m streamlit run app.py
 ```
 
-Open the local URL displayed in your terminal, usually:
+Open `http://localhost:8501`, choose a sample CSV or upload your own, and start exploring.
 
-http://localhost:8501
+## Tested, Not Just Prompted
 
-The application selects `students.csv` by default. You can switch to another included sample dataset or upload your own CSV through the sidebar.
-
-The Streamlit interface currently limits uploads to 10 MB.
-
-## Running from the Terminal
-
-You can also ask questions without the web interface:
+Lumo has **90 passing automated tests**, covering analytical calculations, edge cases, function calling, charts, and AI provider switching.
 
 ```bash
-python run_agent.py sample_data/students.csv "Which department has the highest average marks?"
+python -m pytest -q
 ```
 
-For another dataset:
+The project also includes two sample datasets—`students.csv` and `sales.csv`—to demonstrate analysis across different data structures.
 
-```bash
-python run_agent.py sample_data/sales.csv "Which region generated the highest total revenue?"
-```
+## A Few Things to Know
 
-The terminal displays the generated answer and the actual tool calls.
+Lumo is still a learning project, so there are limitations:
 
-## Testing
+- CSV is the supported upload format, with a 10 MB interface limit.
+- AI responses depend on model availability and API quotas.
+- The two agents may interpret questions differently, even though they share analytical tools.
+- Automatic fallback handles selected failures, not every possible error.
+- Chat history is session-based; persistent memory is not implemented.
 
-Run the entire automated test suite:
+## What I Learned
 
-```bash
-python -m pytest -v
-```
+Building Lumo helped me understand how an AI agent can go beyond generating text.
 
-Tests cover:
+The most interesting part was separating the model's decisions from the actual analysis. The AI chooses the tools, but the results come from Python functions that can be tested independently.
 
-- Loading valid and empty CSV datasets
-- Dataset profiling
-- Numeric and text filtering
-- Statistical aggregation
-- Group comparisons
-- Pearson correlation
-- Chart generation
-- Invalid input handling
-- Tool execution traces
-- Agent behavior using mocked Gemini responses
-- Rejection of analytical answers without tool execution
+I also learned how important error handling, reproducible tests, and API reliability become when moving a project from a local script to a deployed application.
 
-Mocked agent tests do not require live Gemini API requests.
+AI assistance was used throughout development for learning, implementation support, testing, and debugging.
 
-## Demonstration
+---
 
-Two example datasets are included.
-
-**Student dataset**
-
-- Compare average marks across departments.
-- Calculate correlation between study hours and marks.
-- Create a chart of student counts by department.
-
-**Sales dataset**
-
-- Compare total revenue across regions.
-- Find the highest-revenue region.
-- Visualize order counts by region.
-
-These examples demonstrate that the system is not restricted to one dataset structure.
-
-## Design Decisions
-
-**Why separate the LLM from the analytical tools?**
-
-The LLM is responsible for interpreting questions and selecting tools. Pandas performs the numerical calculations. This makes the analysis easier to test and inspect.
-
-**Why maintain execution traces?**
-
-A plausible AI-generated answer does not prove that analysis occurred. The trace records real Python tool executions and their arguments and results.
-
-**Why use Streamlit?**
-
-Streamlit provides a Python-based interactive interface without requiring a separate frontend and backend server.
-
-**Why use Plotly?**
-
-Plotly supports interactive charts that users can inspect directly in the browser.
-
-## Limitations
-
-- The current interface supports CSV uploads.
-- It requires access to an eligible Gemini API project.
-- API availability and rate limits may affect responses.
-- Statistical operations require suitable column types.
-- Very large datasets may require additional performance improvements.
-- Chat history is retained within the current Streamlit session; persistent cross-session agent memory has not been implemented.
-
-## Development and AI Assistance
-
-AI assistance was used during planning, explanation, implementation, and debugging.
-
-The project was built incrementally, with Git checkpoints and automated tests for individual tools and agent behavior. The implementation uses custom Python analytical functions rather than relying on the LLM to generate numerical answers without executing tools.
-
-## Future Improvements
-
-- Persistent memory for user-defined metrics and preferences
-- More advanced multi-step analytical workflows
-- Additional file formats
-- Exportable analysis reports
-- More advanced visualization options
+*Less spreadsheet scrolling. More understanding.*
