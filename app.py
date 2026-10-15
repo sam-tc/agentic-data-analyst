@@ -10,6 +10,7 @@ from __future__ import annotations
 import html
 import re
 import time
+import logging
 from hashlib import sha256
 from io import BytesIO
 from pathlib import Path
@@ -26,6 +27,8 @@ from src.tools.visualization import create_visualization
 
 ROOT = Path(__file__).resolve().parent
 MAX_UPLOAD_BYTES = 10 * 1024 * 1024
+
+logger = logging.getLogger(__name__)
 
 # Change the product name in ONE place.
 APP_NAME = "Lumo"
@@ -826,6 +829,7 @@ if view == "Analyst":
                 )
                 charts = charts_from_trace(df, trace)
             except Exception as error:  # noqa: BLE001 - surfaced to the user
+                logger.exception("Lumo analysis request failed")
                 thinking.empty()
                 level, title, hint = friendly_error(error)
                 history.extend(
